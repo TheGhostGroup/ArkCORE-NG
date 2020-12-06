@@ -91,7 +91,7 @@ class MotionMaster //: private std::stack<MovementGenerator *>
             if (empty())
                 return;
 
-            Impl[_top] = NULL;
+            Impl[_top] = nullptr;
             while (!empty() && !top())
                 --_top;
         }
@@ -110,7 +110,7 @@ class MotionMaster //: private std::stack<MovementGenerator *>
         {
             for (uint8 i = 0; i < MAX_MOTION_SLOT; ++i)
             {
-                Impl[i] = NULL;
+                Impl[i] = nullptr;
                 _needInit[i] = true;
             }
         }
@@ -134,35 +134,9 @@ class MotionMaster //: private std::stack<MovementGenerator *>
 
         void DirectDelete(_Ty curr);
         void DelayedDelete(_Ty curr);
-
         void UpdateMotion(uint32 diff);
-        void Clear(bool reset = true)
-        {
-            if (_cleanFlag & MMCF_UPDATE)
-            {
-                if (reset)
-                    _cleanFlag |= MMCF_RESET;
-                else
-                    _cleanFlag &= ~MMCF_RESET;
-                DelayedClean();
-            }
-            else
-                DirectClean(reset);
-        }
-        void MovementExpired(bool reset = true)
-        {
-            if (_cleanFlag & MMCF_UPDATE)
-            {
-                if (reset)
-                    _cleanFlag |= MMCF_RESET;
-                else
-                    _cleanFlag &= ~MMCF_RESET;
-                DelayedExpire();
-            }
-            else
-                DirectExpire(reset);
-        }
-
+        void Clear(bool reset = true);
+        void MovementExpired(bool reset = true);
         void MoveIdle();
         void MoveTargetedHome();
         void MoveRandom(float spawndist = 0.0f);
@@ -187,6 +161,8 @@ class MotionMaster //: private std::stack<MovementGenerator *>
         void MoveJump(float x, float y, float z, float speedXY, float speedZ, uint32 id = EVENT_JUMP);
         void MoveKnockTo(float x, float y, float z, float speedXY, float speedZ, uint32 id);
         void MoveFall(uint32 id = 0);
+		void MoveCirclePath(float x, float y, float z, float radius, bool clockwise, uint8 stepCount);
+		void MoveSmoothPath(uint32 pointId, G3D::Vector3 const* pathPoints, size_t pathSize, bool walk);
 
         void MoveSeekAssistance(float x, float y, float z);
         void MoveSeekAssistanceDistract(uint32 timer);
